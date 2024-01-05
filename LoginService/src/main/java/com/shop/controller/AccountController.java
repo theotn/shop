@@ -1,20 +1,18 @@
 package com.shop.controller;
 
-import com.shop.dto.AccountDTO;
+import com.shop.dto.AccountReceivedDTO;
+import com.shop.dto.AccountSentDTO;
 import com.shop.entity.Account;
 import com.shop.exception.AuthException;
 import com.shop.exception.NotFoundException;
 import com.shop.service.AccountService;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/auth")
 @Validated
 public class AccountController {
 
@@ -24,17 +22,29 @@ public class AccountController {
         this.accountService = accountService;
     }
 
-    @PostMapping("/signup")
-    public ResponseEntity<AccountDTO> signUp(@RequestBody AccountDTO accountDTO) throws AuthException {
+    @PostMapping("/sign-up")
+    public ResponseEntity<AccountSentDTO> signUp(@Valid @RequestBody AccountReceivedDTO accountDTO) throws AuthException {
 
-        AccountDTO account = accountService.signUp(accountDTO);
+        AccountSentDTO account = accountService.signUp(accountDTO);
         return new ResponseEntity<>(account, HttpStatus.CREATED);
     }
 
-    @PostMapping("/login")
-    public ResponseEntity<AccountDTO> login(@RequestBody AccountDTO accountDTO) throws AuthException, NotFoundException {
+    @PostMapping("/log-in")
+    public ResponseEntity<AccountSentDTO> login(@Valid @RequestBody AccountReceivedDTO accountDTO) throws AuthException, NotFoundException {
 
-        AccountDTO account = accountService.login(accountDTO);
+        AccountSentDTO account = accountService.login(accountDTO);
+        return new ResponseEntity<>(account, HttpStatus.OK);
+    }
+    @GetMapping("/account")
+    public ResponseEntity<AccountSentDTO> getAccount(@RequestParam("account") Integer accountId) throws NotFoundException {
+
+        AccountSentDTO account = accountService.getAccount(accountId);
+        return new ResponseEntity<>(account, HttpStatus.OK);
+    }
+    @PutMapping("/update")
+    public ResponseEntity<AccountSentDTO> update(@Valid @RequestBody AccountReceivedDTO accountDTO, @RequestParam("account") Integer accountId) throws AuthException, NotFoundException {
+
+        AccountSentDTO account = accountService.updateAccount(accountDTO,accountId);
         return new ResponseEntity<>(account, HttpStatus.OK);
     }
 }

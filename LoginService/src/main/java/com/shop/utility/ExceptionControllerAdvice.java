@@ -1,6 +1,7 @@
 package com.shop.utility;
 
 import com.shop.exception.AuthException;
+import com.shop.exception.NotFoundException;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.ConstraintViolationException;
 import org.springframework.http.HttpStatus;
@@ -29,7 +30,7 @@ public class ExceptionControllerAdvice {
         error.setTimeStamp(LocalDateTime.now());
 
 
-        return new ResponseEntity<ErrorInfo>(error, HttpStatus.INTERNAL_SERVER_ERROR);
+        return new ResponseEntity<ErrorInfo>(error, HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(AuthException.class)
@@ -45,17 +46,17 @@ public class ExceptionControllerAdvice {
     }
 
 
-//    @ExceptionHandler(NotFoundException.class)
-//    public ResponseEntity<ErrorInfo> eventExceptionHandler(NotFoundException exception) {
-//
-//        ErrorInfo error = new ErrorInfo();
-//
-//        error.setErrorMessage(exception.getMessage());
-//        error.setErrorCode(HttpStatus.NOT_FOUND.value());
-//        error.setTimeStamp(LocalDateTime.now());
-//
-//        return new ResponseEntity<ErrorInfo>(error, HttpStatus.NOT_FOUND);
-//    }
+    @ExceptionHandler(NotFoundException.class)
+    public ResponseEntity<ErrorInfo> eventExceptionHandler(NotFoundException exception) {
+
+        ErrorInfo error = new ErrorInfo();
+
+        error.setErrorMessage(exception.getMessage());
+        error.setErrorCode(HttpStatus.NOT_FOUND.value());
+        error.setTimeStamp(LocalDateTime.now());
+
+        return new ResponseEntity<ErrorInfo>(error, HttpStatus.NOT_FOUND);
+    }
 
     @ExceptionHandler(ConstraintViolationException.class)
     public ResponseEntity<ErrorInfo> constraintViolationHandler(ConstraintViolationException exception) {

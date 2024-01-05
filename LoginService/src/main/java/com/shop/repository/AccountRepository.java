@@ -1,6 +1,5 @@
 package com.shop.repository;
 
-import com.shop.dto.AccountDTO;
 import com.shop.entity.Account;
 import org.springframework.data.jpa.repository.JpaRepository;
 
